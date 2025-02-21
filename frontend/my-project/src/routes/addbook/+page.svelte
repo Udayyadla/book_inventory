@@ -14,7 +14,7 @@
         published_date:published_date,
         price:Number(price)
         }
-     axios.post("http://127.0.0.1:8000/api/books",book)
+     axios.post("http://127.0.0.1:8000/api/books/",book)
      .then((response)=>{
         console.log(response.data)
         goto("/")
