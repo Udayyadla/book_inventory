@@ -17,6 +17,7 @@
      axios.post("http://127.0.0.1:8000/api/books/",book)
      .then((response)=>{
         console.log(response.data)
+         alert("Book added successfully!")
         goto("/")
      })
      .catch((error)=>{  
