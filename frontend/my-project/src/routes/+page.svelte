@@ -25,6 +25,7 @@ const updatedata=(id)=>{
     axios.patch(`http://127.0.0.1:8000/api/books/${id}/`,updatedBookData)
     .then(res=>{ console.log(res.data)
         fetchdata()
+        showModal=false
     })
 .catch(err=>
 console.log(err)
