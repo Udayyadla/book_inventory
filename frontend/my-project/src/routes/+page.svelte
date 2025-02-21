@@ -22,7 +22,7 @@ const update=(book)=>{
    showModal=true
 }
 const updatedata=(id)=>{
-    axios.patch(`http://127.0.0.1:8000/api/books/${id}`,updatedBookData)
+    axios.patch(`http://127.0.0.1:8000/api/books/${id}/`,updatedBookData)
     .then(res=>{ console.log(res.data)})
 .catch(err=>
 console.log(err)
@@ -31,7 +31,7 @@ console.log(err)
 
 }
 const handeldelete=(id)=>{
-    axios.delete(`http://127.0.0.1:8000/api/books/${id} `)
+    axios.delete(`http://127.0.0.1:8000/api/books/${id}/`)
     .then(res=>
     console.log(res.data)
     ).catch(err=>
