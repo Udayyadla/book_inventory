@@ -22,8 +22,10 @@ const update=(book)=>{
    showModal=true
 }
 const updatedata=(id)=>{
-    axios.patch(`http://127.0.0.1:8000/api/books/${id}`,updatedBookData)
-    .then(res=>{ console.log(res.data)})
+    axios.patch(`http://127.0.0.1:8000/api/books/${id}/`,updatedBookData)
+    .then(res=>{ console.log(res.data)
+        fetchdata()
+    })
 .catch(err=>
 console.log(err)
 )
@@ -31,11 +33,13 @@ console.log(err)
 
 }
 const handeldelete=(id)=>{
-    axios.delete(`http://127.0.0.1:8000/api/books/${id} `)
+    axios.delete(`http://127.0.0.1:8000/api/books/${id}/`)
     .then(res=>
     console.log(res.data)
-    ).catch(err=>
+    ).catch(err=>{
     console.log(err)
+    fetchdata()
+    }
     )
 }
 onMount(()=>{
@@ -93,8 +97,12 @@ onMount(()=>{
   
               <label>Price</label>
               <input placeholder="book price" type="number" bind:value={updatedBookData.price} class="w-full border-b-2 p-0.5 pl-2 mb-2 mt-2 outline-0 focus:border-red-600"/>
-  
-              <button class="w-full mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" on:click={()=>updatedata(updatedBookData.id)}>Update</button>
+             <div class="w-full  mt-1 p-3 flex justify-between">
+                <button class=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" on:click={()=>updatedata(updatedBookData.id)}>Update</button>
+                 <button class=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" on:click={()=>{showModal=false}}>close</button>
+             </div>
+
+           
           </div>
         </div>
   </div>
