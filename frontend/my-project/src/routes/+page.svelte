@@ -35,11 +35,13 @@ console.log(err)
 }
 const handeldelete=(id)=>{
     axios.delete(`http://127.0.0.1:8000/api/books/${id}/`)
-    .then(res=>
+    .then(res=>{
     console.log(res.data)
+    fetchdata()
+}
     ).catch(err=>{
     console.log(err)
-    fetchdata()
+
     }
     )
 }
