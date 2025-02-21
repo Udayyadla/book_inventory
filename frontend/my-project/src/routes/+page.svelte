@@ -7,7 +7,7 @@ let showModal=false
 let data=[]
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
 const fetchdata=()=>{
-    axios.get("http://127.0.0.1:8000/api/books")
+    axios.get("http://127.0.0.1:8000/api/books/")
     .then(res=>
       { console.log(res.data)
         data=res.data
