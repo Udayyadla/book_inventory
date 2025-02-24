@@ -10,12 +10,17 @@ let filterbyName=""
 let filterbyAuthor=""
 let serach=""
 let sortBy = "";
+let page=""
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
 const fetchdata=()=>{
-    axios.get("http://127.0.0.1:8000/api/books/")
+    console.log(page)
+    axios.get(`http://127.0.0.1:8000/api/books/?page=${page}&limit=${10}`)
     .then(res=>
       { console.log(res.data)
-        data=res.data
+        page=Math.ceil(res.data.count/10)
+        console.log(page)
+        data=res.data.results
+
       }
     ).catch(err=>
         console.log(err)
@@ -63,7 +68,7 @@ const handeldelete=(id)=>{
 const handelsearch=()=>{
    axios .get(`http://127.0.0.1:8000/api/books/?search=${serach}`)
    .then(res=>{
-    data=res.data
+    data=res.data.results
     console.log(data)
    })
    .catch(err=>{
@@ -85,6 +90,10 @@ const handelfilterbyauthor=()=>{}
 onMount(()=>{
     fetchdata()
 })
+const handlepagination=(pageno)=>{
+    page=pageno
+    fetchdata()
+}
 </script>
 <div class="w-full flex ">
     <div class="w-1/4 p-1">
@@ -193,6 +202,19 @@ onMount(()=>{
   </div>
   
   {/if}
+  <div class=" p-3 text-center mt-2">
+    {#each Array(page).fill(0) as _, index}
+    <button 
+    class="px-4 py-2 rounded-xl border m-1"
+    
+        
+        
+        on:click={()=>handlepagination(index+1)}
+        >
+        {index + 1}
+    </button>
+{/each}
+  </div>
 
    </div>
 </div>
