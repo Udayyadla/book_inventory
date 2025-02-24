@@ -10,13 +10,18 @@ let filterbyprice=""
 let filterbyAuthor=""
 let serach=""
 let sortBy = "";
-let page=""
+let page=1
 let minprice=""
 let maxprice=""
+let sortBypublication=""
+
+
+
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
 const fetchdata=()=>{
+    let sortQuery = sortBypublication ? `&ordering=(sortBypublication === "asc" ? "published_date" : "-published_date")` : "";
     
-    axios.get(`http://127.0.0.1:8000/api/books/?page=${page}&limit=${10}&min-price=${minprice}&max-price=${maxprice}`)
+    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${page}&limit=${10}&min_price=${minprice}&max_price=${maxprice}${sortQuery}`)
     .then(res=>
       { console.log(res.data)
         page=Math.ceil(res.data.count/10)
@@ -37,6 +42,14 @@ function sortBooks() {
             fetchdata()
         }
     }
+const sortBookspublication=()=>{
+    page=1
+     fetchdata()
+ 
+
+
+
+}
 const update=(book)=>{
    updatedBookData={...book}
    showModal=true
@@ -82,38 +95,39 @@ const handelfilterbyprice=()=>{
     if(filterbyprice==="10"){
         minprice=1
         maxprice=10
-        fetchdata()
+        
     }
     else if(filterbyprice==="20"){
-        minprice=11
+        minprice=10
         maxprice=20
-        fetchdata()
+        
     }
     else if(filterbyprice==="30"){
-        minprice=21
+        minprice=20
         maxprice=30
-        fetchdata()
+        
     }
     else if(filterbyprice==="40"){
-        minprice=31
+        minprice=30
         maxprice=40
-        fetchdata()
+        
     }
     else if(filterbyprice==="50"){  
-        minprice=41
+        minprice=40
         maxprice=50
-        fetchdata()
     }
     else if(filterbyprice==="60"){
-        minprice=51
+        minprice=50
         maxprice=""
-        fetchdata()
+       
     }
     else{
         minprice=""
         maxprice=""
-        fetchdata()
+        
     }
+    page=1
+    fetchdata()
    
     // axios.get(`http://127.0.0.1:8000/api/books/?search=${filterbyName}`)
     // .then(res=>{
@@ -124,7 +138,22 @@ const handelfilterbyprice=()=>{
     //         console.log(err)
     //         })
 }
-const handelfilterbyauthor=()=>{}
+const handelfilterbyauthor=()=>{
+    serach=filterbyAuthor
+   page=1
+   fetchdata()
+}
+const handleclearfilter=()=>{
+    serach=""
+    filterbyAuthor=""
+    filterbyprice=""
+    sortBy=""
+    minprice=""
+    maxprice=""
+    page=1
+    fetchdata()
+
+}
 onMount(()=>{
     fetchdata()
 })
@@ -153,27 +182,41 @@ const handlepagination=(pageno)=>{
             <select class="w-full mt-2 border-1 rounded-2xl p-2" bind:value={filterbyAuthor} on:change={handelfilterbyauthor}>
                 <option value="">filter by Author </option>
                 {#each data as item}
-                    <option value={item.title}>{item.title}</option>
+                    <option value={item.author}>{item.author}</option>
                 {/each}
             </select>
+        </div>
+        <div class="w-10/12 mt-2 p-2">
+            <h1 class="mt-2 text-xl">Sort by Price</h1>
+            <select class="w-full border-2 text-center rounded-3xl p-2" bind:value={sortBy} on:change={sortBooks}>
+                <option value="">Sort By Price</option> 
+                <option value="asc">Ascending Order</option>
+                <option value="desc">Descending Order</option>
+            </select>
+            </div>
+            <div class="w-10/12 mt-2 p-2">
+                <h1 class="mt-2 text-xl">Sort by Published Date </h1>
+                <select class="w-full border-2 text-center rounded-3xl p-2" bind:value={sortBypublication} on:change={sortBookspublication}>
+                    <option value="">Sort By published_date</option> 
+                    <option value="asc">Ascending Order</option>
+                    <option value="desc">Descending Order</option>
+                </select>
+                </div>
+        <div class="w-10/12 mt-2 p-2 text-center">
+            <button class="p-1 bg-cyan-300 rounded-2xl" on:click={handleclearfilter}>clear all filter</button>
+        
         </div>
     </div>
    <div class =" w-full m-auto ">
     <h1 class=" text-center text-xl m-3">ALL book</h1>
     <div class=" w-full flex justify-between mt-3 mb-3">
-    <div class="  flex justify-center ">
+    <div class=" w-full flex justify-center ">
         <input bind:value={serach} placeholder="search" class="border-2 p-0.5 pl-2 mb-2 mt-2 rounded-2xl outline-0 focus:border-red-600 mr-3"/>
         <button class=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" on:click={handelsearch}>search</button>
     </div>
-    <div class=" text-center ">
-        <select class="w-full border-2 text-center rounded-3xl p-2" bind:value={sortBy} on:change={sortBooks}>
-            <option value="">Sort By Price</option> 
-            <option value="asc">Ascending Order</option>
-            <option value="desc">Descending Order</option>
-        </select>
+    
        
-       
-    </div>
+  
     
     
 </div>
