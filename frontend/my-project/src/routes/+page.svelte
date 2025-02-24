@@ -6,15 +6,17 @@
 
 let showModal=false
 let data=[]
-let filterbyName=""
+let filterbyprice=""
 let filterbyAuthor=""
 let serach=""
 let sortBy = "";
 let page=""
+let minprice=""
+let maxprice=""
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
 const fetchdata=()=>{
-    console.log(page)
-    axios.get(`http://127.0.0.1:8000/api/books/?page=${page}&limit=${10}`)
+    
+    axios.get(`http://127.0.0.1:8000/api/books/?page=${page}&limit=${10}&min-price=${minprice}&max-price=${maxprice}`)
     .then(res=>
       { console.log(res.data)
         page=Math.ceil(res.data.count/10)
@@ -76,15 +78,51 @@ const handelsearch=()=>{
    })
 
 }
-const handelfilterbyname=()=>{
-    axios.get(`http://127.0.0.1:8000/api/books/?search=${filterbyName}`)
-    .then(res=>{
-        data=res.data
-        console.log(data)
-        })
-        .catch(err=>{
-            console.log(err)
-            })
+const handelfilterbyprice=()=>{
+    if(filterbyprice==="10"){
+        minprice=1
+        maxprice=10
+        fetchdata()
+    }
+    else if(filterbyprice==="20"){
+        minprice=11
+        maxprice=20
+        fetchdata()
+    }
+    else if(filterbyprice==="30"){
+        minprice=21
+        maxprice=30
+        fetchdata()
+    }
+    else if(filterbyprice==="40"){
+        minprice=31
+        maxprice=40
+        fetchdata()
+    }
+    else if(filterbyprice==="50"){  
+        minprice=41
+        maxprice=50
+        fetchdata()
+    }
+    else if(filterbyprice==="60"){
+        minprice=51
+        maxprice=""
+        fetchdata()
+    }
+    else{
+        minprice=""
+        maxprice=""
+        fetchdata()
+    }
+   
+    // axios.get(`http://127.0.0.1:8000/api/books/?search=${filterbyName}`)
+    // .then(res=>{
+    //     data=res.data
+    //     console.log(data)
+    //     })
+    //     .catch(err=>{
+    //         console.log(err)
+    //         })
 }
 const handelfilterbyauthor=()=>{}
 onMount(()=>{
@@ -99,12 +137,15 @@ const handlepagination=(pageno)=>{
     <div class="w-1/4 p-1">
         <h1 class=" text-center mt-2 text-2xl ">Filters</h1>
         <div class="w-10/12 mt-2 p-2">
-            <h1 class="mt-2 text-xl">Filters by Name</h1>
-            <select class="w-full mt-2 border-1 rounded-2xl p-2" bind:value={filterbyName} on:change={handelfilterbyname}>
-                <option value="">filter by  Name</option>
-                {#each data as item}
-                    <option value={item.title}>{item.title}</option>
-                {/each}
+            <h1 class="mt-2 text-xl">Filters by price</h1>
+            <select class="w-full mt-2 border-1 rounded-2xl p-2" bind:value={filterbyprice} on:change={handelfilterbyprice}>
+                <option value="">filter by price </option>
+                <option value="10">1 to 10</option>
+                <option value="20">11 to 20</option>
+                <option value="30">21 to 30</option>
+                <option value="40">31 to 40</option>
+                <option value="50">41 to 50</option>
+                <option value="60">more than 50</option>
             </select>
         </div>
         <div class="w-10/12 mt-2 p-2">
