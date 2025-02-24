@@ -10,22 +10,26 @@ let filterbyprice=""
 let filterbyAuthor=""
 let serach=""
 let sortBy = "";
-let page=1
+let totalpage=""
 let minprice=""
 let maxprice=""
 let sortBypublication=""
-
+let limit=""
+let currentpage=1
 
 
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
 const fetchdata=()=>{
-    let sortQuery = sortBypublication ? `&ordering=(sortBypublication === "asc" ? "published_date" : "-published_date")` : "";
-    
-    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${page}&limit=${10}&min_price=${minprice}&max_price=${maxprice}${sortQuery}`)
+    let sortQuery = sortBypublication 
+            ? `&ordering=${sortBypublication === "asc" ? "published_date" : "-published_date"}`
+            : "";
+
+    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${currentpage}&limit=${10}&min_price=${minprice}&max_price=${maxprice}${sortQuery}`)
     .then(res=>
       { console.log(res.data)
-        page=Math.ceil(res.data.count/10)
-        console.log(page)
+        totalpage=res.data.total_pages
+        limit=res.data.page_size
+        
         data=res.data.results
 
       }
@@ -84,6 +88,8 @@ const handelsearch=()=>{
    axios .get(`http://127.0.0.1:8000/api/books/?search=${serach}`)
    .then(res=>{
     data=res.data.results
+    totalpage=res.data.total_pages
+
     console.log(data)
    })
    .catch(err=>{
@@ -126,7 +132,7 @@ const handelfilterbyprice=()=>{
         maxprice=""
         
     }
-    page=1
+    currentpage=1
     fetchdata()
    
     // axios.get(`http://127.0.0.1:8000/api/books/?search=${filterbyName}`)
@@ -140,7 +146,7 @@ const handelfilterbyprice=()=>{
 }
 const handelfilterbyauthor=()=>{
     serach=filterbyAuthor
-   page=1
+   currentpage=1
    fetchdata()
 }
 const handleclearfilter=()=>{
@@ -150,7 +156,7 @@ const handleclearfilter=()=>{
     sortBy=""
     minprice=""
     maxprice=""
-    page=1
+    currentpage=1
     fetchdata()
 
 }
@@ -158,7 +164,7 @@ onMount(()=>{
     fetchdata()
 })
 const handlepagination=(pageno)=>{
-    page=pageno
+    currentpage=pageno
     fetchdata()
 }
 </script>
@@ -196,7 +202,7 @@ const handlepagination=(pageno)=>{
             </div>
             <div class="w-10/12 mt-2 p-2">
                 <h1 class="mt-2 text-xl">Sort by Published Date </h1>
-                <select class="w-full border-2 text-center rounded-3xl p-2" bind:value={sortBypublication} on:change={sortBookspublication}>
+                <select class="w-full border-2 text-center rounded-3xl p-2" bind:value={sortBypublication} on:change={()=>fetchdata()}>
                     <option value="">Sort By published_date</option> 
                     <option value="asc">Ascending Order</option>
                     <option value="desc">Descending Order</option>
@@ -287,12 +293,12 @@ const handlepagination=(pageno)=>{
   
   {/if}
   <div class=" p-3 text-center mt-2">
-    {#each Array(page).fill(0) as _, index}
+    {#each Array(totalpage).fill(0) as _, index}
     <button 
-    class="px-4 py-2 rounded-xl border m-1"
+    class="px-4 py-2 rounded-xl border m-1 {currentpage==index+1?'bg-amber-100':"bg-amber-300"}"
     
         
-        
+        disabled={currentpage==index+1}
         on:click={()=>handlepagination(index+1)}
         >
         {index + 1}
