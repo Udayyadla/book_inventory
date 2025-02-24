@@ -6,6 +6,8 @@
 
 let showModal=false
 let data=[]
+let filterbyName=""
+let filterbyAuthor=""
 let serach=""
 let sortBy = "";
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
@@ -69,11 +71,44 @@ const handelsearch=()=>{
    })
 
 }
+const handelfilterbyname=()=>{
+    axios.get(`http://127.0.0.1:8000/api/books/?search=${filterbyName}`)
+    .then(res=>{
+        data=res.data
+        console.log(data)
+        })
+        .catch(err=>{
+            console.log(err)
+            })
+}
+const handelfilterbyauthor=()=>{}
 onMount(()=>{
     fetchdata()
 })
 </script>
-<div class ="w-10/12 m-auto ">
+<div class="w-full flex ">
+    <div class="w-1/4 p-1">
+        <h1 class=" text-center mt-2 text-2xl ">Filters</h1>
+        <div class="w-10/12 mt-2 p-2">
+            <h1 class="mt-2 text-xl">Filters by Name</h1>
+            <select class="w-full mt-2 border-1 rounded-2xl p-2" bind:value={filterbyName} on:change={handelfilterbyname}>
+                <option value="">filter by  Name</option>
+                {#each data as item}
+                    <option value={item.title}>{item.title}</option>
+                {/each}
+            </select>
+        </div>
+        <div class="w-10/12 mt-2 p-2">
+            <h1 class="mt-2 text-xl">Filters by Author</h1>
+            <select class="w-full mt-2 border-1 rounded-2xl p-2" bind:value={filterbyAuthor} on:change={handelfilterbyauthor}>
+                <option value="">filter by Author </option>
+                {#each data as item}
+                    <option value={item.title}>{item.title}</option>
+                {/each}
+            </select>
+        </div>
+    </div>
+   <div class =" w-full m-auto ">
     <h1 class=" text-center text-xl m-3">ALL book</h1>
     <div class=" w-full flex justify-between mt-3 mb-3">
     <div class="  flex justify-center ">
@@ -89,9 +124,8 @@ onMount(()=>{
        
        
     </div>
-    <div>
-        
-    </div>
+    
+    
 </div>
     {#if data.length===0}
         <h1 class="text-2xl mt-5 text-center text-red-500">No Result Found</h1>
@@ -160,4 +194,5 @@ onMount(()=>{
   
   {/if}
 
+   </div>
 </div>
