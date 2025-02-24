@@ -89,6 +89,9 @@ onMount(()=>{
        
        
     </div>
+    <div>
+        
+    </div>
 </div>
     {#if data.length===0}
         <h1 class="text-2xl mt-5 text-center text-red-500">No Result Found</h1>
