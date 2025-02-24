@@ -1,0 +1,202 @@
+[
+    {
+        "model": "books.book",
+        "pk": 1,
+        "fields": {
+            "title": "The Great Gatsby",
+            "author": "F. Scott Fitzgerald",
+            "published_date": "1925-04-10",
+            "price": "10.99"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 2,
+        "fields": {
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "published_date": "1960-07-11",
+            "price": "12.50"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 3,
+        "fields": {
+            "title": "1984",
+            "author": "George Orwell",
+            "published_date": "1949-06-08",
+            "price": "9.99"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 4,
+        "fields": {
+            "title": "Pride and Prejudice",
+            "author": "Jane Austen",
+            "published_date": "1813-01-28",
+            "price": "7.99"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 5,
+        "fields": {
+            "title": "Moby Dick",
+            "author": "Herman Melville",
+            "published_date": "1851-10-18",
+            "price": "11.50"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 6,
+        "fields": {
+            "title": "War and Peace",
+            "author": "Leo Tolstoy",
+            "published_date": "1869-01-01",
+            "price": "14.99"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 7,
+        "fields": {
+            "title": "The Catcher in the Rye",
+            "author": "J.D. Salinger",
+            "published_date": "1951-07-16",
+            "price": "8.75"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 8,
+        "fields": {
+            "title": "Brave New World",
+            "author": "Aldous Huxley",
+            "published_date": "1932-08-01",
+            "price": "9.50"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 9,
+        "fields": {
+            "title": "Crime and Punishment",
+            "author": "Fyodor Dostoevsky",
+            "published_date": "1866-01-01",
+            "price": "10.00"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 10,
+        "fields": {
+            "title": "Wuthering Heights",
+            "author": "Emily Brontë",
+            "published_date": "1847-12-01",
+            "price": "8.25"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 11,
+        "fields": {
+            "title": "The Hobbit",
+            "author": "J.R.R. Tolkien",
+            "published_date": "1937-09-21",
+            "price": "12.99"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 12,
+        "fields": {
+            "title": "The Lord of the Rings",
+            "author": "J.R.R. Tolkien",
+            "published_date": "1954-07-29",
+            "price": "25.00"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 13,
+        "fields": {
+            "title": "The Alchemist",
+            "author": "Paulo Coelho",
+            "published_date": "1988-01-01",
+            "price": "9.99"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 14,
+        "fields": {
+            "title": "The Da Vinci Code",
+            "author": "Dan Brown",
+            "published_date": "2003-04-01",
+            "price": "10.50"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 15,
+        "fields": {
+            "title": "The Shining",
+            "author": "Stephen King",
+            "published_date": "1977-01-28",
+            "price": "11.25"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 16,
+        "fields": {
+            "title": "It",
+            "author": "Stephen King",
+            "published_date": "1986-09-15",
+            "price": "14.75"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 17,
+        "fields": {
+            "title": "The Book Thief",
+            "author": "Markus Zusak",
+            "published_date": "2005-03-14",
+            "price": "8.99"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 18,
+        "fields": {
+            "title": "The Hunger Games",
+            "author": "Suzanne Collins",
+            "published_date": "2008-09-14",
+            "price": "9.25"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 19,
+        "fields": {
+            "title": "Dune",
+            "author": "Frank Herbert",
+            "published_date": "1965-08-01",
+            "price": "12.75"
+        }
+    },
+    {
+        "model": "books.book",
+        "pk": 20,
+        "fields": {
+            "title": "The Maze Runner",
+            "author": "James Dashner",
+            "published_date": "2009-10-06",
+            "price": "8.50"
+        }
+    }
+]
