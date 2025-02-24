@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 # Create your views here.
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -21,4 +19,4 @@ class BookViewSet(viewsets.ModelViewSet):
 
     # Add filtering and search capabilities
     filter_backends = [filters.SearchFilter, DjangoFilterBackend, OrderingFilter]
-    search_fields = ["title", "author"]
+    search_fields = ["title", "author", "published_date"]
