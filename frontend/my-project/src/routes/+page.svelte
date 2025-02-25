@@ -1,8 +1,8 @@
 <script>
     import axios from "axios";
     import { onMount } from "svelte";
-    import { preventDefault } from "svelte/legacy";
-
+    
+  
 
 let showModal=false
 let data=[]
@@ -16,44 +16,35 @@ let maxprice=""
 let sortBypublication=""
 let limit=""
 let currentpage=1
+let autorsfilter=[]
 
 
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
 const fetchdata=()=>{
     let sortQuery = sortBypublication 
             ? `&ordering=${sortBypublication === "asc" ? "published_date" : "-published_date"}`
-            : "";
+            : ""
+    let sortQuery2 = sortBy?`&ordering=${sortBy==="asc"?"price":"-price"}`:""
 
-    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${currentpage}&limit=${limit}&min_price=${minprice}&max_price=${maxprice}${sortQuery}`)
+    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${currentpage}&limit=${limit}&min_price=${minprice}&max_price=${maxprice}${sortQuery}${sortQuery2}`)
     .then(res=>
       { console.log(res.data)
         totalpage=res.data.total_pages
         limit=res.data.page_size
         
-        data=res.data.results
-
+        data=res.data.results 
+        minprice=res.data.filters.min_price
+        maxprice=res.data.filters.max_price
+        autorsfilter=res.data.filters.authors
+        filterbyprice=res.data.filters.max_price
+        console.log(autorsfilter)
       }
     ).catch(err=>
         console.log(err)
     )
 }
-function sortBooks() {
-        if (sortBy === "asc") {
-            data = [...data].sort((a, b) => a.price - b.price);
-        } else if (sortBy === "desc") {
-            data = [...data].sort((a, b) => b.price - a.price);
-        }else{
-            fetchdata()
-        }
-    }
-const sortBookspublication=()=>{
-    page=1
-     fetchdata()
- 
 
 
-
-}
 const update=(book)=>{
    updatedBookData={...book}
    showModal=true
@@ -84,6 +75,7 @@ const handeldelete=(id)=>{
     }
     )
 }
+
 const handelsearch=()=>{
    axios .get(`http://127.0.0.1:8000/api/books/?search=${serach}`)
    .then(res=>{
@@ -98,51 +90,12 @@ const handelsearch=()=>{
 
 }
 const handelfilterbyprice=()=>{
-    if(filterbyprice==="10"){
-        minprice=1
-        maxprice=10
-        
-    }
-    else if(filterbyprice==="20"){
-        minprice=10
-        maxprice=20
-        
-    }
-    else if(filterbyprice==="30"){
-        minprice=20
-        maxprice=30
-        
-    }
-    else if(filterbyprice==="40"){
-        minprice=30
-        maxprice=40
-        
-    }
-    else if(filterbyprice==="50"){  
-        minprice=40
-        maxprice=50
-    }
-    else if(filterbyprice==="60"){
-        minprice=50
-        maxprice=""
-       
-    }
-    else{
-        minprice=""
-        maxprice=""
-        
-    }
+    console.log(filterbyprice)
+    maxprice=filterbyprice
     currentpage=1
     fetchdata()
    
-    // axios.get(`http://127.0.0.1:8000/api/books/?search=${filterbyName}`)
-    // .then(res=>{
-    //     data=res.data
-    //     console.log(data)
-    //     })
-    //     .catch(err=>{
-    //         console.log(err)
-    //         })
+    
 }
 const handelfilterbyauthor=()=>{
     serach=filterbyAuthor
@@ -173,28 +126,29 @@ const handlepagination=(pageno)=>{
         <h1 class=" text-center mt-2 text-2xl ">Filters</h1>
         <div class="w-10/12 mt-2 p-2">
             <h1 class="mt-2 text-xl">Filters by price</h1>
-            <select class="w-full mt-2 border-1 rounded-2xl p-2" bind:value={filterbyprice} on:change={handelfilterbyprice}>
-                <option value="">filter by price </option>
-                <option value="10">1 to 10</option>
-                <option value="20">11 to 20</option>
-                <option value="30">21 to 30</option>
-                <option value="40">31 to 40</option>
-                <option value="50">41 to 50</option>
-                <option value="60">more than 50</option>
-            </select>
+            
+
+            <div class="relative  mx-auto mt-6">
+               
+                <input type="range" min={minprice} max={maxprice} bind:value={filterbyprice} on:change={handelfilterbyprice}  />
+               <p>Price range: {filterbyprice}</p>
+                
+            </div>
+            
+           
         </div>
         <div class="w-10/12 mt-2 p-2">
             <h1 class="mt-2 text-xl">Filters by Author</h1>
             <select class="w-full mt-2 border-1 rounded-2xl p-2" bind:value={filterbyAuthor} on:change={handelfilterbyauthor}>
                 <option value="">filter by Author </option>
-                {#each data as item}
-                    <option value={item.author}>{item.author}</option>
+                {#each autorsfilter as item}
+                    <option value={item}>{item}</option>
                 {/each}
             </select>
         </div>
         <div class="w-10/12 mt-2 p-2">
             <h1 class="mt-2 text-xl">Sort by Price</h1>
-            <select class="w-full border-2 text-center rounded-3xl p-2" bind:value={sortBy} on:change={sortBooks}>
+            <select class="w-full border-2 text-center rounded-3xl p-2" bind:value={sortBy} on:change={()=>fetchdata()}>
                 <option value="">Sort By Price</option> 
                 <option value="asc">Ascending Order</option>
                 <option value="desc">Descending Order</option>
