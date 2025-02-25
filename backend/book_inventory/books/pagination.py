@@ -5,11 +5,7 @@ from rest_framework.response import Response
 class BookPagination(PageNumberPagination):
     page_size = 5  # Set number of records per page
     page_size_query_param = "page_size"  # allow users to change records per page
-    max_page_size = 100  # prevents users from requesting too many records
-
-
-
-
+    max_page_size = 10  # prevents users from requesting too many records
 
     def get_paginated_response(
         self, data, max_price=None, min_price=None, authors=None
