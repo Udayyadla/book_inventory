@@ -24,7 +24,7 @@ const fetchdata=()=>{
             ? `&ordering=${sortBypublication === "asc" ? "published_date" : "-published_date"}`
             : "";
 
-    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${currentpage}&limit=${10}&min_price=${minprice}&max_price=${maxprice}${sortQuery}`)
+    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${currentpage}&limit=${limit}&min_price=${minprice}&max_price=${maxprice}${sortQuery}`)
     .then(res=>
       { console.log(res.data)
         totalpage=res.data.total_pages
