@@ -75,7 +75,7 @@
         <label for="name" class="text-xl">Email : </label>
     <input
       class="w-full border-1 rounded-2xl p-1 focus:border-red-600 pl-5 mb-2 mt-2"
-      placeholder="Enter username"
+      placeholder="Enter your email"
       type="text"
       bind:value={email}
       required
