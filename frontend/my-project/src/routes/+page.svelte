@@ -116,7 +116,7 @@ const handeldelete=(id)=>{
     warning=true
     Alertmassage="Book Deleted Successfully"
 
-    alert("Book Deleted Successfully")
+    
     fetchdata()
 }
     ).catch(err=>{
