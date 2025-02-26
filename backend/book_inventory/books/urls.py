@@ -1,10 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import BookViewSet,AuthViewSet
+from .views import BookViewSet,AuthViewSet,LoginViewSet,VerifyOTPViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 
 router = DefaultRouter()
+router.register(r'auth/login',LoginViewSet,basename='login')
+router.register(r'auth/verify-otp',VerifyOTPViewSet,basename="verify-otp")
 router.register(r"books", BookViewSet)
 router.register(r'auth',AuthViewSet,basename='auth')
 
