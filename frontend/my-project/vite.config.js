@@ -3,5 +3,8 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit(),tailwindcss()]
+	plugins: [sveltekit(),tailwindcss()],
+	ssr: {
+        noExternal: ["@skeletonlabs/skeleton"] // 👈 Ensure Svelte components are bundled properly
+    }
 });
