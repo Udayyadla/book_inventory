@@ -6,6 +6,7 @@
     import axios from "axios";
     import { onMount } from "svelte";
     import RangeSlider from "svelte-range-slider-pips";
+  import { goto } from '$app/navigation';
   
   
 let toastStore= getToastStore();
@@ -179,7 +180,12 @@ onMount(()=>{
    
     token = localStorage.getItem("token") ?? "";
     console.log("Token loaded:", token);
+    if(token==""){
+      goto("/login")
+    }
+    else{
     fetchdata()
+    }
 })
 const handlepagination=(pageno)=>{
     currentpage=pageno
@@ -198,8 +204,8 @@ const handlepagination=(pageno)=>{
             <div>
                 <RangeSlider 
                 bind:values={range} 
-                min={0} 
-                max={200} 
+                min={minprice} 
+                max={maxprice} 
                 showTooltip={true} 
                 float
                 
