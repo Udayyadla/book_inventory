@@ -1,9 +1,12 @@
 <script>
+	import { getToastStore} from '@skeletonlabs/skeleton';
+  
     import axios from "axios";
     import { onMount } from "svelte";
-    
+    import RangeSlider from "svelte-range-slider-pips";
   
-
+  
+let toastStore= getToastStore();
 let showModal=false
 let data=[]
 let filterbyprice=""
@@ -17,7 +20,7 @@ let sortBypublication=""
 let limit=""
 let currentpage=1
 let autorsfilter=[]
-
+let range=[10,100];
 
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
 const fetchdata=()=>{
@@ -38,6 +41,7 @@ const fetchdata=()=>{
         autorsfilter=res.data.filters.authors
         filterbyprice=res.data.filters.max_price
         console.log(autorsfilter)
+        range = [minprice, maxprice];
       }
     ).catch(err=>
         console.log(err)
@@ -53,7 +57,16 @@ const updatedata=(id)=>{
     axios.patch(`http://127.0.0.1:8000/api/books/${id}/`,updatedBookData)
     .then(res=>{ console.log(res.data)
         fetchdata()
-        alert("Book updated successfully")
+        toastStore.trigger({
+            message: 'Book updated successfully!',
+           
+          
+            // action: {
+            //     label: 'OK',
+            //     response: () => toastStore.clear()
+            // }
+        });
+        // alert("Book updated successfully")
         showModal=false
     })
 .catch(err=>
@@ -121,19 +134,38 @@ const handlepagination=(pageno)=>{
     fetchdata()
 }
 </script>
+
+  
+
+  
 <div class="w-full flex ">
     <div class="w-1/4 p-1">
         <h1 class=" text-center mt-2 text-2xl ">Filters</h1>
         <div class="w-10/12 mt-2 p-2">
             <h1 class="mt-2 text-xl">Filters by price</h1>
+            <div>
+                <RangeSlider 
+                bind:values={range} 
+                min={0} 
+                max={200} 
+                showTooltip={true} 
+                float
+                
+                on:change={() => { 
+                    minprice = range[0]; 
+                    maxprice = range[1]; 
+                    fetchdata(); 
+                }} 
+            />
             
+            </div>
 
-            <div class="relative  mx-auto mt-6">
+            <!-- <div class="relative  mx-auto mt-6">
                
                 <input type="range" min={minprice} max={maxprice} bind:value={filterbyprice} on:change={handelfilterbyprice}  />
                <p>Price range: {filterbyprice}</p>
                 
-            </div>
+            </div> -->
             
            
         </div>
