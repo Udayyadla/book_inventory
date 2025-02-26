@@ -1,4 +1,6 @@
 <script>
+	import { initializeStores } from '@skeletonlabs/skeleton';
+	import Model from './../lib/model.svelte';
 	import { getToastStore} from '@skeletonlabs/skeleton';
   
     import axios from "axios";
@@ -21,6 +23,11 @@ let limit=""
 let currentpage=1
 let autorsfilter=[]
 let range=[10,100];
+let token = ""
+let Alertmassage=""
+let showAlert=false
+let warning=false
+
 
 let updatedBookData={ title:"" , author:"" , published_date:"" , price:"" , id:""}
 const fetchdata=()=>{
@@ -29,7 +36,11 @@ const fetchdata=()=>{
             : ""
     let sortQuery2 = sortBy?`&ordering=${sortBy==="asc"?"price":"-price"}`:""
 
-    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${currentpage}&limit=${limit}&min_price=${minprice}&max_price=${maxprice}${sortQuery}${sortQuery2}`)
+    axios.get(`http://127.0.0.1:8000/api/books/?search=${serach}&page=${currentpage}&limit=${limit}&min_price=${minprice}&max_price=${maxprice}${sortQuery}${sortQuery2}`,{
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    })
     .then(res=>
       { console.log(res.data)
         totalpage=res.data.total_pages
@@ -43,8 +54,14 @@ const fetchdata=()=>{
         console.log(autorsfilter)
         range = [minprice, maxprice];
       }
-    ).catch(err=>
+    ).catch(err=>{
         console.log(err)
+        showAlert=true
+        warning=true
+        Alertmassage="Error fetching data"
+    }
+
+
     )
 }
 
@@ -53,44 +70,73 @@ const update=(book)=>{
    updatedBookData={...book}
    showModal=true
 }
+const closeAlert=()=>{
+    showAlert=false
+}
 const updatedata=(id)=>{
-    axios.patch(`http://127.0.0.1:8000/api/books/${id}/`,updatedBookData)
+    axios.patch(`http://127.0.0.1:8000/api/books/${id}/`,updatedBookData,
+    {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+            }
+    }
+    )
     .then(res=>{ console.log(res.data)
         fetchdata()
-        toastStore.trigger({
-            message: 'Book updated successfully!',
-           
-          
-            // action: {
-            //     label: 'OK',
-            //     response: () => toastStore.clear()
-            // }
-        });
-        // alert("Book updated successfully")
+            warning=false
+            showAlert=true
+            Alertmassage='Book updated successfully!',
+            
         showModal=false
     })
-.catch(err=>
-console.log(err)
+.catch(err=>{
+        console.log(err)
+        showAlert=true
+        warning=true
+        Alertmassage="Error fetching data"
+    }
+
 )
       
 
 }
 const handeldelete=(id)=>{
-    axios.delete(`http://127.0.0.1:8000/api/books/${id}/`)
+    axios.delete(`http://127.0.0.1:8000/api/books/${id}/`,
+    {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+            }
+    }
+    )
     .then(res=>{
     console.log(res.data)
+    showAlert=true
+    warning=true
+    Alertmassage="Book Deleted Successfully"
+
     alert("Book Deleted Successfully")
     fetchdata()
 }
     ).catch(err=>{
-    console.log(err)
-
+        console.log(err)
+        showAlert=true
+        warning=true
+        Alertmassage="Error fetching data"
     }
     )
 }
 
 const handelsearch=()=>{
-   axios .get(`http://127.0.0.1:8000/api/books/?search=${serach}`)
+   axios .get(`http://127.0.0.1:8000/api/books/?search=${serach}`,
+    {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+            }
+    }
+   )
    .then(res=>{
     data=res.data.results
     totalpage=res.data.total_pages
@@ -98,8 +144,11 @@ const handelsearch=()=>{
     console.log(data)
    })
    .catch(err=>{
-    console.log(err)
-   })
+        console.log(err)
+        showAlert=true
+        warning=true
+        Alertmassage="Error fetching data"
+    })
 
 }
 const handelfilterbyprice=()=>{
@@ -127,6 +176,9 @@ const handleclearfilter=()=>{
 
 }
 onMount(()=>{
+   
+    token = localStorage.getItem("token") ?? "";
+    console.log("Token loaded:", token);
     fetchdata()
 })
 const handlepagination=(pageno)=>{
@@ -160,12 +212,7 @@ const handlepagination=(pageno)=>{
             
             </div>
 
-            <!-- <div class="relative  mx-auto mt-6">
-               
-                <input type="range" min={minprice} max={maxprice} bind:value={filterbyprice} on:change={handelfilterbyprice}  />
-               <p>Price range: {filterbyprice}</p>
-                
-            </div> -->
+            
             
            
         </div>
@@ -293,4 +340,5 @@ const handlepagination=(pageno)=>{
   </div>
 
    </div>
+   <Model isOpen={showAlert} message={Alertmassage} onClose={closeAlert} warning={warning}/>
 </div>
