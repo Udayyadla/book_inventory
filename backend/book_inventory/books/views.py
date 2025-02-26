@@ -1,14 +1,17 @@
 # Create your views here.
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, permissions
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 from .models import Book
-from .serializers import BookSerializer
+from .serializers import BookSerializer, RegisterSerializer, UserSerializer
 from .pagination import BookPagination
 from .filters import BookFilter  # Assuming you have a BookFilter class
 from rest_framework.filters import OrderingFilter
 from django.db.models import Max, Min
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -23,6 +26,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
     filter_backends = [filters.SearchFilter, DjangoFilterBackend, OrderingFilter]
     search_fields = ["title", "author", "published_date"]
+    permission_classes=[permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())  # Apply filters if needed
@@ -42,3 +46,24 @@ class BookViewSet(viewsets.ModelViewSet):
                 authors=authors,
             )
         return Response(self.get_serializer(queryset, many=True).data)
+
+
+class AuthViewSet(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=["POST"])
+    def register(self, request):
+        """Register a new User"""
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(
+                {"message": "User registered successfully!", "user_id": user.id},
+                status=201,
+            )
+        return Response(serializer.errors,status=400)
+    @action(detail=False,methods=['POST'])
+    def logout(self,request):
+        """Logout a user (Client-side: Remove a token)"""
+        return Response({"message":"Logged Out successfully!"})
+        
