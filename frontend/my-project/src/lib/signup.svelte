@@ -1,13 +1,24 @@
 <script>
+	import Model from './model.svelte';
+    import { goto } from "$app/navigation";
     import axios from "axios";
 
     let email=""
     let password=""
     let username=""
+    let showModal=false
+    let message=""
+    let warning=false
+    const closeAlert=()=>{
+        showModal=false
+    }
 
 const handlesignup=()=>{
     if(email===""||password===""||username===""){
-        alert("Please fill all the fields")
+        showModal=true
+        message="Please fill in all fields"
+        warning=true
+
         }
         else{
             const user={
@@ -18,11 +29,11 @@ const handlesignup=()=>{
                 axios.post(`http://127.0.0.1:8000/api/auth/register/`,user)
                 .then((response)=>{
                     console.log(response.data)
-                    alert("User created successfully")
+                    goto("/login")
                     })
                     .catch((error)=>{
                         console.log(error)
-                        alert("Error in creating user")
+                        
                         })
                     }
 }
@@ -40,7 +51,8 @@ const handlesignup=()=>{
      
 
          <div class="flex justify-center">
-            <button class="bg-red-400 text-white font-bold py-2 px-4 rounded mt-3" type="submit">Signup</button>
+            <button class="bg-blue-400 text-white font-bold py-2 px-4 rounded mt-3" on:click={()=>handlesignup()}>Signup</button>
          </div>
     </from>
+   <Model isOpen={showModal} onClose={closeAlert} message={message} warning={warning}></Model> 
 </div>
