@@ -48,7 +48,7 @@ const closeAlert=()=>{
     <div class="w-full p-3 text-center">
         <h1 class=" text-3xl font-bold">Add Book Information</h1>
     </div>
-    <div class="lg:w-5/12 md:w-7/12 sm:w-10/12 p-3.5 m-auto mt-5 text-center">
+    <div class="lg:w-5/12 md:w-7/12 sm:w-10/12 p-3.5 m-auto mt-5 ">
 
         
         <label  >Book Name    </label>
