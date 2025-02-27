@@ -51,6 +51,9 @@ class LoginSerializer(serializers.Serializer):
         user = User.objects.filter(email=email).first()
         if not user or not user.check_password(password):
             raise serializers.ValidationError("Invalid credentials")
+            
+            
+
         # Generate OTP
         otp_code = OTP.generate_otp()
         OTP.objects.update_or_create(

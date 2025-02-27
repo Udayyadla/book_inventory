@@ -3,6 +3,7 @@
     import { goto } from "$app/navigation";
     import axios from "axios";
     import { onMount } from "svelte";
+  import { validateAutorName, validatebook, validateDate, validatePrice } from '$lib';
 
   let title=""
   let author=""
@@ -10,11 +11,21 @@
   let price=""
   let token=""
   let Alertmassage=""
+  let warn=false
 let showAlert=false
 const closeAlert=()=>{
     showAlert=false
 }
   const handelAdd=()=>{
+    if(title==""|| author==""||published_date==""||price==""){
+      showAlert=true
+      warn=true
+      Alertmassage="Please fill all the fields"
+      
+    }
+    else{
+      if(validateAutorName(author)&&validateDate(published_date)&& validatePrice(price)&& validatebook(title)){
+        
     let book={  
         title:title,
         author:author,
@@ -37,7 +48,8 @@ const closeAlert=()=>{
      })
      .catch((error)=>{  
         console.log(error)
-        })
+      })
+      }}
   }
   onMount(()=>{
     token = localStorage.getItem("token") ?? "";
@@ -53,13 +65,29 @@ const closeAlert=()=>{
         
         <label  >Book Name    </label>
         <input placeholder="book name" type="text" bind:value={title} class=" w-full border-b-2  p-0.5 pl-2  mb-2 mt-2 outline-0  focus:border-red-600"/>
-         <label>Author Name</label>
+        
+        {#if title!=""&&!validatebook(title)}
+            <p class="text-center text-red-600  animate-pulse">Name must be +2 letters and contain alphabets</p>
+         {/if}
+         
+        <label>Author Name</label>
         <input placeholder="author name" type="text" bind:value={author} class=" w-full border-b-2  p-0.5 pl-2  mb-2 mt-2 outline-0 focus:border-red-600"/>
+        {#if author!=="" &&!validateAutorName(author)}
+            <p class="text-center text-red-600  animate-pulse">Name must be +2 letters and contain alphabets</p>
+         {/if}
         <label>Published Date</label>
         <input placeholder="book published_date" type="date" bind:value={published_date} class=" w-full border-b-2  p-0.5 pl-2  mb-2 mt-2 outline-0 focus:border-red-600"/>
+        {#if published_date!=="" &&!validateDate(published_date)}
+         
+              <p class="text-red-600 animate-pulse">Invalid Date</p>
+            
+        {/if}
         <label>Price</label>
         <input placeholder="book price" min="1" type="number" bind:value={price} class=" w-full border-b-2  p-0.5 pl-2  mb-2 mt-2 outline-0 focus:border-red-600" />
+        {#if price!==""&&!validatePrice(price)}
+             <p class="text-center text-red-600  animate-pulse">Price must be greater than 0</p>
+          {/if}
         <button class=" w-full mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" on:click={handelAdd} >Add Book</button>
     </div>
-    <Model isOpen={showAlert} message={Alertmassage} onClose={closeAlert}/>
+    <Model isOpen={showAlert} message={Alertmassage} onClose={closeAlert} warning={warn}/>
 </div>
