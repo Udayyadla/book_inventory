@@ -4,6 +4,7 @@
     import { initializeStores } from "@skeletonlabs/skeleton";
     import { onMount } from "svelte";
     import axios from "axios";
+  import Dyanamicform from "$lib/dyanamicform.svelte";
 
     initializeStores();
     let token = "";
@@ -44,6 +45,7 @@
             {/if}
         </a>
     </div>
+    
     <div class="flex justify-center items-center">
         <slot />
     </div>
